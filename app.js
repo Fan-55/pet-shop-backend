@@ -5,6 +5,9 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require('express')
 const app = express()
 
+app.use(express.urlencoded({ extended: true }))
+app.use(require('./routes'))
+
 app.listen(process.env.PORT, () => {
   console.log(`This app is running at http://localhost:${process.env.PORT}`)
 })
