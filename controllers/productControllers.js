@@ -27,10 +27,15 @@ module.exports = {
     try {
       const product = await Product.findByPk(req.params.id,
         {
+          attributes: {
+            exclude: ['updatedAt', 'createdAt']
+          },
           include: [
             { model: Brand, attributes: ['name'] },
             { model: Category, attributes: ['name'] }
-          ]
+          ],
+          raw: true,
+          nest: true
         })
       if (product) {
         return res.json(product)
