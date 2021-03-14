@@ -3,7 +3,17 @@ const { Product, Brand, Category } = require('../models/index')
 module.exports = {
   getProducts: async (req, res, next) => {
     try {
-      const products = await Product.findAll({ raw: true })
+      const products = await Product.findAll({
+        attributes: {
+          exclude: ['updatedAt', 'createdAt']
+        },
+        include: [
+          { model: Brand, attributes: ['name'] },
+          { model: Category, attributes: ['name'] }
+        ],
+        raw: true,
+        nest: true
+      })
       if (products.length) {
         return res.json(products)
       } else {
