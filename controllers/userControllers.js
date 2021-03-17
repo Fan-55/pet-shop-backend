@@ -4,6 +4,54 @@ const generateToken = require('../utils/token')
 const { checkEmptyFields, checkMatch, checkEmailFormat } = require('../utils/validators')
 
 module.exports = {
+  register: async (req, res, next) => {
+    const { name, email, phone, password, confirmPassword } = req.body
+
+    const { isFieldEmpty, emptyFieldError } = checkEmptyFields({ name, email, password, confirmPassword })
+    if (isFieldEmpty) return res.status(400).json({ message: emptyFieldError })
+
+    const errors = []
+    const { isEmailFormatValid, emailFormatError } = checkEmailFormat(email)
+    if (!isEmailFormatValid) {
+      errors.push(emailFormatError)
+    } else {
+      try {
+        const duplicateEmail = await User.findOne({ where: { email }, raw: true })
+        if (duplicateEmail) errors.push('Email已被註冊')
+      }
+      catch (err) {
+        next(err)
+      }
+    }
+    const { isMatch, matchError } = checkMatch({ password, confirmPassword })
+    if (!isMatch) errors.push(matchError)
+
+    if (phone) {
+      const duplicatePhone = await User.findOne({ where: { phone }, raw: true })
+      if (duplicatePhone) errors.push('電話已被註冊')
+    }
+    if (errors.length) {
+      return res.status(400).json({ message: errors })
+    }
+
+    try {
+      const user = await User.create({
+        name,
+        email,
+        phone,
+        password: bcrypt.hashSync(password, 10)
+      })
+      return res.json({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        token: generateToken(user)
+      })
+    } catch (err) {
+      next(err)
+    }
+  },
   login: async (req, res, next) => {
     const { email, password } = req.body
 
