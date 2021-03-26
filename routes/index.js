@@ -3,6 +3,8 @@ const router = express.Router()
 
 const productControllers = require('../controllers/productControllers')
 const userControllers = require('../controllers/userControllers')
+const { isUserLogin } = require('../utils/auth')
+
 
 router.get('/api/products', productControllers.getProducts)
 router.get('/api/products/:id', productControllers.getProduct)
