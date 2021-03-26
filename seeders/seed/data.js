@@ -106,5 +106,35 @@ module.exports = {
       CategoryId: 4,
       BrandId: 9
     }
+  ],
+  users: [
+    {
+      name: 'root',
+      email: 'root@seed.com',
+      phone: '0970000000',
+      password: '123',
+      role: 'admin'
+    },
+    {
+      name: 'user1',
+      email: 'user1@seed.com',
+      phone: '0970000001',
+      password: '123',
+      role: 'user'
+    },
+    {
+      name: 'user2',
+      email: 'user2@seed.com',
+      phone: '0970000002',
+      password: '123',
+      role: 'user'
+    },
+    {
+      name: 'user3',
+      email: 'user3@seed.com',
+      phone: '0970000003',
+      password: '123',
+      role: 'user'
+    },
   ]
 }

@@ -39,7 +39,7 @@ module.exports = {
         name,
         email,
         phone,
-        password: bcrypt.hashSync(password, 10)
+        password: bcrypt.hashSync(password, bcrypt.genSaltSync(10))
       })
       return res.json({
         id: user.id,
