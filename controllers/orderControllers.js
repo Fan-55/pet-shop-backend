@@ -1,5 +1,6 @@
 const { Order, OrderItem, Product } = require('../models/index')
 const { checkEmptyFields } = require('../utils/validators')
+const { getTradeInfo, create_mpg_aes_decrypt } = require('../utils/tradeInfo')
 
 module.exports = {
   createOrder: async (req, res, next) => {
@@ -42,3 +43,70 @@ module.exports = {
       next(err)
     }
   },
+  getOrder: async (req, res, next) => {
+    const orderId = req.params.id
+    try {
+      const order = await Order.findByPk(orderId, {
+        include: [{
+          model: OrderItem,
+          attributes: { exclude: ['createdAt', 'updatedAt'] },
+          include: [
+            {
+              model: Product,
+              attributes: ['id', 'name', 'price', 'image'],
+            }
+          ]
+        }]
+      })
+      if (order && order.UserId !== req.user.id) {
+        return res.status(400).json({ message: 'Not allowed to access' })
+      }
+      if (!order) {
+        return res.status(404).json({ message: 'Order Not Found' })
+      }
+      if (!order.payment_status) {
+        const Amt = order.total
+        const Desc = `${req.user.name}的訂單`
+        const email = req.user.email
+        const tradeInfo = getTradeInfo(Amt, Desc, email, orderId)
+        order.sn = tradeInfo.MerchantOrderNo
+        await order.save()
+        return res.json({ orderContent: order, tradeInfo })
+      } else {
+        return res.json({ orderContent: order, tradeInfo: null })
+      }
+    } catch (err) {
+      next(err)
+    }
+  },
+  newebpayCallback: async (req, res, next) => {
+    console.log('===== spgatewayCallback =====')
+    console.log(req.method)
+    console.log(req.url)
+    console.log(req.query)
+    console.log(req.body)
+    console.log('===== spgatewayCallback: TradeInfo =====')
+    console.log(req.body.TradeInfo)
+    const data = JSON.parse(create_mpg_aes_decrypt(req.body.TradeInfo))
+    console.log('===== spgatewayCallback: create_mpg_aes_decrypt、data =====')
+    console.log(data)
+
+    if (req.query.from === 'NotifyURL') {
+      return res.status(200).json({ message: 'POST /api/newebpay/callback for NotifyURL triggered' })
+    }
+
+    if (req.query.from === 'ReturnURL') {
+      try {
+        const order = await Order.findOne({ where: { sn: data.Result.MerchantOrderNo } })
+        if (data.Status === 'SUCCESS') {
+          order.payment_status = true
+          order.paid_at = Date.now()
+          await order.save()
+        }
+        return res.redirect(`http://localhost:3000/orders/${order.id}`)
+      } catch (err) {
+        next(err)
+      }
+    }
+  }
+}

@@ -15,6 +15,10 @@ router.post('/api/register', userControllers.register)
 router.post('/api/login', userControllers.login)
 
 router.post('/api/orders', isUserLogin, orderControllers.createOrder)
+router.get('/api/orders/:id', isUserLogin, orderControllers.getOrder)
+
+router.post('/api/newebpay/callback', orderControllers.newebpayCallback)
+
 router.use((err, req, res, next) => {
   console.log(err)
   return res.status(500).json({ message: 'Internal Server Error', error: err })
