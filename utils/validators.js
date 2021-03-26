@@ -2,13 +2,13 @@ const translator = require('./translator')
 
 module.exports = {
   checkEmptyFields: (fields) => {
-    const emptyFieldError = []
+    const emptyFieldError = {}
     for (const fieldName in fields) {
       if (!fields[fieldName]) {
-        emptyFieldError.push(`${translator(fieldName)}不得為空白`)
+        emptyFieldError[fieldName] = `${translator(fieldName)}不得為空白`
       }
     }
-    if (emptyFieldError.length) {
+    if (Object.keys(emptyFieldError).length) {
       return { isFieldEmpty: true, emptyFieldError }
     } else {
       return { isFieldEmpty: false }
