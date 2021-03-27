@@ -4,10 +4,10 @@ const MerchantID = process.env.MerchantID
 const HashKey = process.env.HashKey
 const HashIV = process.env.HashIV
 const PayGateWay = 'https://ccore.newebpay.com/MPG/mpg_gateway'
-const ServerURL = 'https://f8dba915b190.ngrok.io'
+const ServerURL = process.env.ServerURL
 const ReturnURL = ServerURL + '/api/newebpay/callback?from=ReturnURL'
 const NotifyURL = ServerURL + '/api/newebpay/callback?from=NotifyURL'
-const FrontEndURL = 'http://localhost:3000'
+const FrontEndURL = process.env.FrontEndURL || 'http://localhost:3000'
 
 function genDataChain(TradeInfo) {
   let results = []
