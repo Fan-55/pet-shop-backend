@@ -108,5 +108,21 @@ module.exports = {
         next(err)
       }
     }
-  }
+  },
+  getOrders: async (req, res, next) => {
+    try {
+      const orders = await Order.findAll({
+        where: { UserId: req.user.id },
+        include: [{
+          model: OrderItem,
+          include: [{ model: Product }]
+        }]
+      })
+      console.log(orders)
+      return res.json(orders)
+
+    } catch (err) {
+      next(err)
+    }
+  },
 }

@@ -14,6 +14,7 @@ router.get('/api/products/:id', productControllers.getProduct)
 router.post('/api/register', userControllers.register)
 router.post('/api/login', userControllers.login)
 
+router.get('/api/orders', isUserLogin, orderControllers.getOrders)
 router.post('/api/orders', isUserLogin, orderControllers.createOrder)
 router.get('/api/orders/:id', isUserLogin, orderControllers.getOrder)
 
