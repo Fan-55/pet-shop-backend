@@ -125,4 +125,22 @@ module.exports = {
       next(err)
     }
   },
+  deleteOrder: async (req, res, next) => {
+    try {
+      const order = await Order.findByPk(req.params.id)
+      if (order && order.UserId !== req.user.id) {
+        return res.status(400).json({ message: 'Order cancellation is not allowed by current user' })
+      }
+      if (!order) {
+        return res.status(404).json({ message: 'Order Not Found' })
+      }
+      if (order.payment_status) {
+        return res.status(400).json({ message: '不能取消已付款的訂單' })
+      }
+      await order.destroy()
+      return res.json({ message: '成功刪除' })
+    } catch (err) {
+      next(err)
+    }
+  },
 }

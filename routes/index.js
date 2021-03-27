@@ -15,6 +15,7 @@ router.post('/api/register', userControllers.register)
 router.post('/api/login', userControllers.login)
 
 router.get('/api/orders', isUserLogin, orderControllers.getOrders)
+router.delete('/api/orders/:id', isUserLogin, orderControllers.deleteOrder)
 router.post('/api/orders', isUserLogin, orderControllers.createOrder)
 router.get('/api/orders/:id', isUserLogin, orderControllers.getOrder)
 
