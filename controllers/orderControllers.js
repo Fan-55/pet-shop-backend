@@ -116,11 +116,10 @@ module.exports = {
         include: [{
           model: OrderItem,
           include: [{ model: Product }]
-        }]
+        }],
+        order: [['createdAt', 'DESC']]
       })
-      console.log(orders)
       return res.json(orders)
-
     } catch (err) {
       next(err)
     }
