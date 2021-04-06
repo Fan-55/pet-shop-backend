@@ -29,7 +29,7 @@
 - 使用localstorage實作購物車功能
 - RWD
 - jwt authentication
-- 串接後端API
+- 後端RESTful API
 - 後端API使用Node.js + Exresss.js + MySQL實作
 
 #### Tools
