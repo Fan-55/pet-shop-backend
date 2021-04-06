@@ -103,7 +103,7 @@ module.exports = {
           order.paid_at = Date.now()
           await order.save()
         }
-        return res.redirect(`http://localhost:3000/orders/${order.id}`)
+        return res.redirect(`${process.env.FrontEndURL}/orders/${order.id}`)
       } catch (err) {
         next(err)
       }

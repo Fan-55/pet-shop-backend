@@ -10,5 +10,5 @@ app.use(express.json())
 app.use(require('./routes'))
 
 app.listen(process.env.PORT, () => {
-  console.log(`This app is running at http://localhost:${process.env.PORT}`)
+  console.log(`This app is running on port: ${process.env.PORT}`)
 })
