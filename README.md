@@ -73,7 +73,7 @@ $ git clone https://github.com/Fan-55/pet-shop-eCommerce-backend.git
 ```
 2. Go to the directory 
 ```
-$ cd pet-shop-eCommerce-frontend
+$ cd pet-shop-eCommerce-backend
 ```
 3. Install the required packages 
 ```
