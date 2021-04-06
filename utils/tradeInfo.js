@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
 const crypto = require('crypto')
 
 const MerchantID = process.env.MerchantID
